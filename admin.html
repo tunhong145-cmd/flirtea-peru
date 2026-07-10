@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Flirtea</title>
+    <title>后台管理 - Flirtea</title>
     <style>
         * {
             margin: 0;
@@ -11,7 +11,7 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: #f0f2f5;
             min-height: 100vh;
         }
@@ -216,6 +216,12 @@
         .upload-area input {
             display: none;
         }
+        .upload-progress {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #666;
+            display: none;
+        }
         /* Toast */
         .toast {
             position: fixed;
@@ -240,108 +246,106 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Password change section */
-        .password-section {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #eee;
-        }
     </style>
 </head>
 <body>
     <!-- Login -->
     <div class="login-container" id="login-screen">
         <div class="login-box">
-            <h1>🔐 Admin Panel</h1>
-            <p>Flirtea - Panel de Administración</p>
+            <h1>🔐 后台管理</h1>
+            <p>Flirtea - 管理面板</p>
             <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="login-password" placeholder="Ingresa la contraseña" onkeypress="if(event.key==='Enter')login()">
+                <label>密码</label>
+                <input type="password" id="login-password" placeholder="请输入密码" onkeypress="if(event.key==='Enter')login()">
             </div>
-            <button class="btn" onclick="login()">Iniciar Sesión</button>
+            <button class="btn" onclick="login()">登录</button>
         </div>
     </div>
 
     <!-- Admin Panel -->
     <div class="admin-container" id="admin-panel">
         <div class="admin-header">
-            <h1>⚙️ Panel de Administración</h1>
-            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+            <h1>⚙️ 后台管理面板</h1>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
         </div>
 
         <!-- FB Pixel -->
         <div class="card">
-            <h2>📊 Facebook Pixel <span>- Se inyecta automáticamente en la landing page</span></h2>
+            <h2>📊 Facebook 像素 <span>- 自动注入到落地页</span></h2>
             <div class="form-group">
                 <label>Pixel ID</label>
-                <input type="text" id="fb-pixel" placeholder="Ej: 123456789012345">
+                <input type="text" id="fb-pixel" placeholder="例如: 123456789012345">
             </div>
             <div class="save-row">
-                <button class="btn btn-small" onclick="saveConfig('fb_pixel', 'fb-pixel')">Guardar</button>
-                <span class="status-msg" id="status-fb-pixel">✓ Guardado</span>
+                <button class="btn btn-small" onclick="saveConfig('fb_pixel', 'fb-pixel')">保存</button>
+                <span class="status-msg" id="status-fb-pixel">✓ 已保存</span>
             </div>
         </div>
 
         <!-- APK URL -->
         <div class="card">
-            <h2>📦 Enlace de Descarga APK <span>- URL del archivo APK</span></h2>
+            <h2>📦 APK 下载链接 <span>- 用户点击安装按钮后的下载地址</span></h2>
             <div class="form-group">
-                <label>URL del APK</label>
-                <input type="text" id="apk-url" placeholder="https://ejemplo.com/app.apk">
+                <label>APK 链接地址</label>
+                <input type="text" id="apk-url" placeholder="https://example.com/app.apk">
             </div>
             <div class="save-row">
-                <button class="btn btn-small" onclick="saveConfig('apk_url', 'apk-url')">Guardar</button>
-                <span class="status-msg" id="status-apk-url">✓ Guardado</span>
+                <button class="btn btn-small" onclick="saveConfig('apk_url', 'apk-url')">保存</button>
+                <span class="status-msg" id="status-apk-url">✓ 已保存</span>
             </div>
         </div>
 
         <!-- App Info -->
         <div class="card">
-            <h2>📱 Información de la App</h2>
+            <h2>📱 APP 信息 <span>- 显示在落地页上的名称</span></h2>
             <div class="form-group">
-                <label>Nombre de la App</label>
+                <label>APP 名称</label>
                 <input type="text" id="app-name" placeholder="Flirtea - Chat y Citas">
             </div>
             <div class="form-group">
-                <label>Nombre del Desarrollador</label>
+                <label>开发者名称</label>
                 <input type="text" id="developer-name" placeholder="Social Connect S.A.C.">
             </div>
             <div class="save-row">
-                <button class="btn btn-small" onclick="saveAppInfo()">Guardar</button>
-                <span class="status-msg" id="status-app-info">✓ Guardado</span>
+                <button class="btn btn-small" onclick="saveAppInfo()">保存</button>
+                <span class="status-msg" id="status-app-info">✓ 已保存</span>
             </div>
         </div>
 
         <!-- Preview Images -->
         <div class="card">
-            <h2>🖼️ Imágenes de Vista Previa <span>- Capturas de pantalla del carrusel</span></h2>
+            <h2>🖼️ 预览图管理 <span>- 落地页截图轮播区的图片（可上传色图等）</span></h2>
             <div class="image-grid" id="image-grid">
                 <!-- Images loaded dynamically -->
             </div>
             <div class="upload-area" onclick="document.getElementById('file-input').click()">
-                <p>📤 Haz clic para subir imágenes<br><small>Formatos: JPG, PNG, WebP (máx. 5MB)</small></p>
+                <p>📤 点击上传图片<br><small>支持 JPG、PNG、WebP 格式（最大 5MB）</small></p>
                 <input type="file" id="file-input" accept="image/*" multiple onchange="uploadImages(this.files)">
+            </div>
+            <div class="upload-progress" id="upload-progress">正在上传...</div>
+            <div class="save-row" id="image-save-row" style="display:none;">
+                <span class="status-msg" style="display:inline; color:#28a745;">✓ 图片已保存并同步到前端</span>
             </div>
         </div>
 
         <!-- Change Password -->
         <div class="card">
-            <h2>🔑 Cambiar Contraseña</h2>
+            <h2>🔑 修改密码</h2>
             <div class="form-group">
-                <label>Contraseña Actual</label>
-                <input type="password" id="current-password" placeholder="Contraseña actual">
+                <label>当前密码</label>
+                <input type="password" id="current-password" placeholder="请输入当前密码">
             </div>
             <div class="form-group">
-                <label>Nueva Contraseña</label>
-                <input type="password" id="new-password" placeholder="Nueva contraseña">
+                <label>新密码</label>
+                <input type="password" id="new-password" placeholder="请输入新密码">
             </div>
             <div class="form-group">
-                <label>Confirmar Nueva Contraseña</label>
-                <input type="password" id="confirm-password" placeholder="Confirmar nueva contraseña">
+                <label>确认新密码</label>
+                <input type="password" id="confirm-password" placeholder="请再次输入新密码">
             </div>
             <div class="save-row">
-                <button class="btn btn-small btn-secondary" onclick="changePassword()">Cambiar Contraseña</button>
-                <span class="status-msg" id="status-password">✓ Contraseña cambiada</span>
+                <button class="btn btn-small btn-secondary" onclick="changePassword()">修改密码</button>
+                <span class="status-msg" id="status-password">✓ 密码已修改</span>
             </div>
         </div>
     </div>
@@ -370,7 +374,7 @@
         async function login() {
             const password = document.getElementById('login-password').value;
             if (!password) {
-                showToast('Ingresa la contraseña', 'error');
+                showToast('请输入密码', 'error');
                 return;
             }
 
@@ -388,12 +392,12 @@
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('admin-panel').style.display = 'block';
                     loadAdminData();
-                    showToast('¡Bienvenido!', 'success');
+                    showToast('登录成功！', 'success');
                 } else {
-                    showToast('Contraseña incorrecta', 'error');
+                    showToast('密码错误', 'error');
                 }
             } catch (error) {
-                showToast('Error de conexión', 'error');
+                showToast('连接失败，请检查网络', 'error');
             }
         }
 
@@ -435,7 +439,7 @@
 
                 loadImages();
             } catch (error) {
-                showToast('Error cargando datos', 'error');
+                showToast('加载数据失败', 'error');
             }
         }
 
@@ -459,12 +463,12 @@
                     const statusEl = document.getElementById(`status-${inputId}`);
                     statusEl.style.display = 'inline';
                     setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
-                    showToast('Guardado exitosamente', 'success');
+                    showToast('保存成功', 'success');
                 } else {
-                    showToast('Error al guardar', 'error');
+                    showToast('保存失败', 'error');
                 }
             } catch (error) {
-                showToast('Error de conexión', 'error');
+                showToast('连接失败', 'error');
             }
         }
 
@@ -499,9 +503,9 @@
                 const statusEl = document.getElementById('status-app-info');
                 statusEl.style.display = 'inline';
                 setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
-                showToast('Información guardada', 'success');
+                showToast('APP信息已保存', 'success');
             } catch (error) {
-                showToast('Error al guardar', 'error');
+                showToast('保存失败', 'error');
             }
         }
 
@@ -512,17 +516,17 @@
             const confirm = document.getElementById('confirm-password').value;
 
             if (!current || !newPass || !confirm) {
-                showToast('Completa todos los campos', 'error');
+                showToast('请填写所有字段', 'error');
                 return;
             }
 
             if (newPass !== confirm) {
-                showToast('Las contraseñas no coinciden', 'error');
+                showToast('两次输入的新密码不一致', 'error');
                 return;
             }
 
             if (newPass.length < 6) {
-                showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                showToast('密码长度至少6位', 'error');
                 return;
             }
 
@@ -537,7 +541,7 @@
                 const data = await response.json();
 
                 if (data[0].value !== current) {
-                    showToast('Contraseña actual incorrecta', 'error');
+                    showToast('当前密码错误', 'error');
                     return;
                 }
 
@@ -556,9 +560,9 @@
                 document.getElementById('current-password').value = '';
                 document.getElementById('new-password').value = '';
                 document.getElementById('confirm-password').value = '';
-                showToast('Contraseña cambiada exitosamente', 'success');
+                showToast('密码修改成功', 'success');
             } catch (error) {
-                showToast('Error al cambiar contraseña', 'error');
+                showToast('修改密码失败', 'error');
             }
         }
 
@@ -576,17 +580,23 @@
                 const grid = document.getElementById('image-grid');
                 grid.innerHTML = '';
                 
-                images.forEach(img => {
-                    const div = document.createElement('div');
-                    div.className = 'image-item';
-                    div.innerHTML = `
-                        <img src="${img.image_url}" alt="Preview">
-                        <button class="delete-btn" onclick="deleteImage(${img.id}, '${img.image_url}')">×</button>
-                    `;
-                    grid.appendChild(div);
-                });
+                if (images && images.length > 0) {
+                    images.forEach(img => {
+                        const div = document.createElement('div');
+                        div.className = 'image-item';
+                        div.innerHTML = `
+                            <img src="${img.image_url}" alt="预览图">
+                            <button class="delete-btn" onclick="deleteImage(${img.id}, '${img.image_url}')">×</button>
+                        `;
+                        grid.appendChild(div);
+                    });
+                    document.getElementById('image-save-row').style.display = 'flex';
+                } else {
+                    grid.innerHTML = '<p style="color:#999; font-size:13px; grid-column:1/-1;">暂无图片，请上传</p>';
+                    document.getElementById('image-save-row').style.display = 'none';
+                }
             } catch (error) {
-                console.log('Error loading images:', error);
+                console.log('加载图片失败:', error);
             }
         }
 
@@ -594,13 +604,18 @@
         async function uploadImages(files) {
             if (!files || files.length === 0) return;
 
+            const progressEl = document.getElementById('upload-progress');
+            progressEl.style.display = 'block';
+            let uploaded = 0;
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 if (file.size > 5 * 1024 * 1024) {
-                    showToast(`${file.name} es demasiado grande (máx 5MB)`, 'error');
+                    showToast(`${file.name} 文件太大（最大5MB）`, 'error');
                     continue;
                 }
 
+                progressEl.textContent = `正在上传 ${i + 1}/${files.length}...`;
                 const fileName = `preview_${Date.now()}_${i}.${file.name.split('.').pop()}`;
                 
                 try {
@@ -610,7 +625,8 @@
                         headers: {
                             'apikey': SUPABASE_SERVICE_KEY,
                             'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-                            'Content-Type': file.type
+                            'Content-Type': file.type,
+                            'x-upsert': 'true'
                         },
                         body: file
                     });
@@ -630,23 +646,30 @@
                             body: JSON.stringify({ image_url: imageUrl, sort_order: Date.now() })
                         });
 
-                        showToast(`Imagen subida: ${file.name}`, 'success');
+                        uploaded++;
                     } else {
-                        showToast(`Error subiendo ${file.name}`, 'error');
+                        const errData = await uploadResponse.text();
+                        console.log('Upload error:', errData);
+                        showToast(`上传 ${file.name} 失败`, 'error');
                     }
                 } catch (error) {
-                    showToast(`Error: ${error.message}`, 'error');
+                    showToast(`上传出错: ${error.message}`, 'error');
                 }
             }
 
             // Reset file input
             document.getElementById('file-input').value = '';
-            loadImages();
+            progressEl.style.display = 'none';
+            
+            if (uploaded > 0) {
+                showToast(`成功上传 ${uploaded} 张图片`, 'success');
+                loadImages();
+            }
         }
 
         // Delete image
         async function deleteImage(id, imageUrl) {
-            if (!confirm('¿Eliminar esta imagen?')) return;
+            if (!confirm('确定要删除这张图片吗？')) return;
 
             try {
                 // Extract filename from URL
@@ -670,10 +693,10 @@
                     }
                 });
 
-                showToast('Imagen eliminada', 'success');
+                showToast('图片已删除', 'success');
                 loadImages();
             } catch (error) {
-                showToast('Error al eliminar', 'error');
+                showToast('删除失败', 'error');
             }
         }
     </script>
