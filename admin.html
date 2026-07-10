@@ -643,7 +643,7 @@
                                 'Content-Type': 'application/json',
                                 'Prefer': 'return=minimal'
                             },
-                            body: JSON.stringify({ image_url: imageUrl, sort_order: Date.now() })
+                            body: JSON.stringify({ image_url: imageUrl, sort_order: i + 1 })
                         });
 
                         uploaded++;
