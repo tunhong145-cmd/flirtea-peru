@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Flirtea</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .login-box h1 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+        .login-box p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #e91e63;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #e91e63, #ff5722);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-danger {
+            background: #dc3545;
+        }
+        .btn-small {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        /* Admin Panel */
+        .admin-container {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: #fff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .admin-header h1 {
+            font-size: 20px;
+            color: #1a1a2e;
+        }
+        .logout-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+        }
+        .logout-btn:hover {
+            background: #f5f5f5;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .card h2 {
+            font-size: 16px;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .card h2 span {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+        .save-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 12px;
+        }
+        .save-row .btn {
+            width: auto;
+            padding: 10px 24px;
+        }
+        .status-msg {
+            font-size: 13px;
+            color: #28a745;
+            display: none;
+        }
+        /* Image Upload */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .image-item {
+            position: relative;
+            aspect-ratio: 9/16;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f5f5f5;
+            border: 1px solid #eee;
+        }
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-item .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(220, 53, 69, 0.9);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .upload-area:hover {
+            border-color: #e91e63;
+        }
+        .upload-area p {
+            color: #666;
+            font-size: 14px;
+        }
+        .upload-area input {
+            display: none;
+        }
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+        .toast.success {
+            background: #28a745;
+        }
+        .toast.error {
+            background: #dc3545;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Password change section */
+        .password-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login -->
+    <div class="login-container" id="login-screen">
+        <div class="login-box">
+            <h1>🔐 Admin Panel</h1>
+            <p>Flirtea - Panel de Administración</p>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="login-password" placeholder="Ingresa la contraseña" onkeypress="if(event.key==='Enter')login()">
+            </div>
+            <button class="btn" onclick="login()">Iniciar Sesión</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container" id="admin-panel">
+        <div class="admin-header">
+            <h1>⚙️ Panel de Administración</h1>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <!-- FB Pixel -->
+        <div class="card">
+            <h2>📊 Facebook Pixel <span>- Se inyecta automáticamente en la landing page</span></h2>
+            <div class="form-group">
+                <label>Pixel ID</label>
+                <input type="text" id="fb-pixel" placeholder="Ej: 123456789012345">
+            </div>
+            <div class="save-row">
+                <button class="btn btn-small" onclick="saveConfig('fb_pixel', 'fb-pixel')">Guardar</button>
+                <span class="status-msg" id="status-fb-pixel">✓ Guardado</span>
+            </div>
+        </div>
+
+        <!-- APK URL -->
+        <div class="card">
+            <h2>📦 Enlace de Descarga APK <span>- URL del archivo APK</span></h2>
+            <div class="form-group">
+                <label>URL del APK</label>
+                <input type="text" id="apk-url" placeholder="https://ejemplo.com/app.apk">
+            </div>
+            <div class="save-row">
+                <button class="btn btn-small" onclick="saveConfig('apk_url', 'apk-url')">Guardar</button>
+                <span class="status-msg" id="status-apk-url">✓ Guardado</span>
+            </div>
+        </div>
+
+        <!-- App Info -->
+        <div class="card">
+            <h2>📱 Información de la App</h2>
+            <div class="form-group">
+                <label>Nombre de la App</label>
+                <input type="text" id="app-name" placeholder="Flirtea - Chat y Citas">
+            </div>
+            <div class="form-group">
+                <label>Nombre del Desarrollador</label>
+                <input type="text" id="developer-name" placeholder="Social Connect S.A.C.">
+            </div>
+            <div class="save-row">
+                <button class="btn btn-small" onclick="saveAppInfo()">Guardar</button>
+                <span class="status-msg" id="status-app-info">✓ Guardado</span>
+            </div>
+        </div>
+
+        <!-- Preview Images -->
+        <div class="card">
+            <h2>🖼️ Imágenes de Vista Previa <span>- Capturas de pantalla del carrusel</span></h2>
+            <div class="image-grid" id="image-grid">
+                <!-- Images loaded dynamically -->
+            </div>
+            <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                <p>📤 Haz clic para subir imágenes<br><small>Formatos: JPG, PNG, WebP (máx. 5MB)</small></p>
+                <input type="file" id="file-input" accept="image/*" multiple onchange="uploadImages(this.files)">
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card">
+            <h2>🔑 Cambiar Contraseña</h2>
+            <div class="form-group">
+                <label>Contraseña Actual</label>
+                <input type="password" id="current-password" placeholder="Contraseña actual">
+            </div>
+            <div class="form-group">
+                <label>Nueva Contraseña</label>
+                <input type="password" id="new-password" placeholder="Nueva contraseña">
+            </div>
+            <div class="form-group">
+                <label>Confirmar Nueva Contraseña</label>
+                <input type="password" id="confirm-password" placeholder="Confirmar nueva contraseña">
+            </div>
+            <div class="save-row">
+                <button class="btn btn-small btn-secondary" onclick="changePassword()">Cambiar Contraseña</button>
+                <span class="status-msg" id="status-password">✓ Contraseña cambiada</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://cjakvlqyxihmcsavohun.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqYWt2bHF5eGlobWNzYXZvaHVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NDA0MzgsImV4cCI6MjA5OTIxNjQzOH0.TO1fQIZy3HYyVA9vOW43MizecqC7EqyAjP8t8UbU8BI';
+        const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqYWt2bHF5eGlobWNzYXZvaHVuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MzY0MDQzOCwiZXhwIjoyMDk5MjE2NDM4fQ.l9QP7aCoI7Jr6Dkj7D5di7RYbEFX15boGJ61agufb6A';
+
+        let isLoggedIn = false;
+
+        // Show toast notification
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Login
+        async function login() {
+            const password = document.getElementById('login-password').value;
+            if (!password) {
+                showToast('Ingresa la contraseña', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.admin_password&select=value`, {
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.length > 0 && data[0].value === password) {
+                    isLoggedIn = true;
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                    loadAdminData();
+                    showToast('¡Bienvenido!', 'success');
+                } else {
+                    showToast('Contraseña incorrecta', 'error');
+                }
+            } catch (error) {
+                showToast('Error de conexión', 'error');
+            }
+        }
+
+        // Logout
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('login-password').value = '';
+        }
+
+        // Load admin data
+        async function loadAdminData() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/app_config?select=key,value`, {
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+                const data = await response.json();
+                
+                data.forEach(item => {
+                    switch(item.key) {
+                        case 'fb_pixel':
+                            document.getElementById('fb-pixel').value = item.value;
+                            break;
+                        case 'apk_url':
+                            document.getElementById('apk-url').value = item.value;
+                            break;
+                        case 'app_name':
+                            document.getElementById('app-name').value = item.value;
+                            break;
+                        case 'developer_name':
+                            document.getElementById('developer-name').value = item.value;
+                            break;
+                    }
+                });
+
+                loadImages();
+            } catch (error) {
+                showToast('Error cargando datos', 'error');
+            }
+        }
+
+        // Save config
+        async function saveConfig(key, inputId) {
+            const value = document.getElementById(inputId).value;
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.${key}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ value: value, updated_at: new Date().toISOString() })
+                });
+
+                if (response.ok) {
+                    const statusEl = document.getElementById(`status-${inputId}`);
+                    statusEl.style.display = 'inline';
+                    setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+                    showToast('Guardado exitosamente', 'success');
+                } else {
+                    showToast('Error al guardar', 'error');
+                }
+            } catch (error) {
+                showToast('Error de conexión', 'error');
+            }
+        }
+
+        // Save app info
+        async function saveAppInfo() {
+            const appName = document.getElementById('app-name').value;
+            const devName = document.getElementById('developer-name').value;
+
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.app_name`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ value: appName, updated_at: new Date().toISOString() })
+                });
+
+                await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.developer_name`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ value: devName, updated_at: new Date().toISOString() })
+                });
+
+                const statusEl = document.getElementById('status-app-info');
+                statusEl.style.display = 'inline';
+                setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+                showToast('Información guardada', 'success');
+            } catch (error) {
+                showToast('Error al guardar', 'error');
+            }
+        }
+
+        // Change password
+        async function changePassword() {
+            const current = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            if (!current || !newPass || !confirm) {
+                showToast('Completa todos los campos', 'error');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+
+            // Verify current password
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.admin_password&select=value`, {
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+                const data = await response.json();
+
+                if (data[0].value !== current) {
+                    showToast('Contraseña actual incorrecta', 'error');
+                    return;
+                }
+
+                // Update password
+                await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.admin_password`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ value: newPass, updated_at: new Date().toISOString() })
+                });
+
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+                showToast('Contraseña cambiada exitosamente', 'success');
+            } catch (error) {
+                showToast('Error al cambiar contraseña', 'error');
+            }
+        }
+
+        // Load images
+        async function loadImages() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/preview_images?select=*&order=sort_order.asc`, {
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+                const images = await response.json();
+                
+                const grid = document.getElementById('image-grid');
+                grid.innerHTML = '';
+                
+                images.forEach(img => {
+                    const div = document.createElement('div');
+                    div.className = 'image-item';
+                    div.innerHTML = `
+                        <img src="${img.image_url}" alt="Preview">
+                        <button class="delete-btn" onclick="deleteImage(${img.id}, '${img.image_url}')">×</button>
+                    `;
+                    grid.appendChild(div);
+                });
+            } catch (error) {
+                console.log('Error loading images:', error);
+            }
+        }
+
+        // Upload images
+        async function uploadImages(files) {
+            if (!files || files.length === 0) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast(`${file.name} es demasiado grande (máx 5MB)`, 'error');
+                    continue;
+                }
+
+                const fileName = `preview_${Date.now()}_${i}.${file.name.split('.').pop()}`;
+                
+                try {
+                    // Upload to Supabase Storage
+                    const uploadResponse = await fetch(`${SUPABASE_URL}/storage/v1/object/images/${fileName}`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                            'Content-Type': file.type
+                        },
+                        body: file
+                    });
+
+                    if (uploadResponse.ok) {
+                        const imageUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${fileName}`;
+                        
+                        // Save to database
+                        await fetch(`${SUPABASE_URL}/rest/v1/preview_images`, {
+                            method: 'POST',
+                            headers: {
+                                'apikey': SUPABASE_SERVICE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal'
+                            },
+                            body: JSON.stringify({ image_url: imageUrl, sort_order: Date.now() })
+                        });
+
+                        showToast(`Imagen subida: ${file.name}`, 'success');
+                    } else {
+                        showToast(`Error subiendo ${file.name}`, 'error');
+                    }
+                } catch (error) {
+                    showToast(`Error: ${error.message}`, 'error');
+                }
+            }
+
+            // Reset file input
+            document.getElementById('file-input').value = '';
+            loadImages();
+        }
+
+        // Delete image
+        async function deleteImage(id, imageUrl) {
+            if (!confirm('¿Eliminar esta imagen?')) return;
+
+            try {
+                // Extract filename from URL
+                const fileName = imageUrl.split('/images/')[1];
+                
+                // Delete from storage
+                await fetch(`${SUPABASE_URL}/storage/v1/object/images/${fileName}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+
+                // Delete from database
+                await fetch(`${SUPABASE_URL}/rest/v1/preview_images?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                    }
+                });
+
+                showToast('Imagen eliminada', 'success');
+                loadImages();
+            } catch (error) {
+                showToast('Error al eliminar', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

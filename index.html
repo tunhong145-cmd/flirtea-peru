@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flirtea - Chat y Citas</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fff;
+            color: #202124;
+            line-height: 1.5;
+        }
+        /* Header */
+        .header {
+            background: #fff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header img {
+            height: 30px;
+        }
+        .header-title {
+            margin-left: 8px;
+            font-size: 20px;
+            color: #5f6368;
+            font-weight: 400;
+        }
+        /* App Info Section */
+        .app-info {
+            padding: 24px 16px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .app-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .app-details {
+            flex: 1;
+        }
+        .app-name {
+            font-size: 24px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 4px;
+        }
+        .developer-name {
+            font-size: 14px;
+            color: #01875f;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .contains-ads {
+            font-size: 12px;
+            color: #5f6368;
+        }
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #202124;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 2px;
+        }
+        .stat-stars {
+            color: #202124;
+            font-size: 12px;
+        }
+        /* Install Button */
+        .install-section {
+            padding: 16px;
+        }
+        .install-btn {
+            width: 100%;
+            background: #01875f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        .install-btn:hover {
+            background: #016b4d;
+        }
+        .install-btn:active {
+            background: #015a40;
+        }
+        /* Screenshots */
+        .screenshots-section {
+            padding: 16px 0;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            padding: 0 16px;
+            margin-bottom: 12px;
+        }
+        .screenshots-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 0 16px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .screenshots-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .screenshot-item {
+            flex-shrink: 0;
+            width: 160px;
+            height: 284px;
+            border-radius: 12px;
+            overflow: hidden;
+            scroll-snap-align: start;
+            background: #f1f3f4;
+        }
+        .screenshot-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* About Section */
+        .about-section {
+            padding: 24px 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .about-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .about-text {
+            font-size: 14px;
+            color: #5f6368;
+            line-height: 1.6;
+        }
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .tag {
+            background: #f1f3f4;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #5f6368;
+        }
+        /* Data Safety */
+        .data-safety {
+            padding: 24px 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .safety-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+        }
+        .safety-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+        .safety-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .safety-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #5f6368;
+        }
+        .safety-text {
+            font-size: 14px;
+            color: #202124;
+        }
+        /* Ratings */
+        .ratings-section {
+            padding: 24px 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .rating-overview {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .rating-big {
+            text-align: center;
+        }
+        .rating-number {
+            font-size: 48px;
+            font-weight: 400;
+            color: #202124;
+        }
+        .rating-stars {
+            color: #01875f;
+            font-size: 14px;
+        }
+        .rating-count {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+        .rating-bars {
+            flex: 1;
+        }
+        .rating-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .rating-bar-label {
+            font-size: 12px;
+            color: #5f6368;
+            width: 8px;
+        }
+        .rating-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .rating-bar-fill {
+            height: 100%;
+            background: #01875f;
+            border-radius: 4px;
+        }
+        /* Footer */
+        .footer {
+            padding: 24px 16px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: #5f6368;
+        }
+        /* Google Play badge */
+        .gplay-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gplay-logo {
+            width: 24px;
+            height: 24px;
+        }
+        /* Responsive */
+        @media (min-width: 600px) {
+            body {
+                max-width: 480px;
+                margin: 0 auto;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                min-height: 100vh;
+            }
+        }
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #01875f;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- FB Pixel will be injected here -->
+    <div id="fb-pixel-container"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="gplay-header">
+            <svg class="gplay-logo" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" opacity="0.1"/>
+                <path fill="#34A853" d="M3.55 12L12 3.55 20.45 12 12 20.45z" opacity="0.2"/>
+                <path fill="#EA4335" d="M12 7l5 5-5 5-5-5z"/>
+            </svg>
+            <span class="header-title">Google Play</span>
+        </div>
+    </div>
+
+    <!-- App Info -->
+    <div class="app-info">
+        <div class="app-icon">
+            <img src="logo.png" alt="Flirtea">
+        </div>
+        <div class="app-details">
+            <h1 class="app-name" id="app-name">Flirtea - Chat y Citas</h1>
+            <div class="developer-name" id="developer-name">Social Connect S.A.C.</div>
+            <div class="contains-ads">Contiene anuncios · Compras en la aplicación</div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-item">
+            <div class="stat-value">4.5 ★</div>
+            <div class="stat-label">89K reseñas</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">1M+</div>
+            <div class="stat-label">Descargas</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">18+</div>
+            <div class="stat-label">Clasificación</div>
+        </div>
+    </div>
+
+    <!-- Install Button -->
+    <div class="install-section">
+        <button class="install-btn" id="install-btn" onclick="downloadApp()">Instalar</button>
+    </div>
+
+    <!-- Screenshots -->
+    <div class="screenshots-section">
+        <div class="section-title">Capturas de pantalla</div>
+        <div class="screenshots-scroll" id="screenshots-container">
+            <!-- Screenshots will be loaded from Supabase -->
+            <div class="screenshot-item" style="background: linear-gradient(135deg, #ff6b8a, #ff8e53); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Vista previa</div>
+            <div class="screenshot-item" style="background: linear-gradient(135deg, #a855f7, #ec4899); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Chat en vivo</div>
+            <div class="screenshot-item" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Conoce gente</div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <div class="about-section">
+        <h2 class="about-title">Acerca de esta aplicación</h2>
+        <p class="about-text">
+            Flirtea es la mejor aplicación para conocer personas nuevas cerca de ti. 
+            Chatea en vivo, haz videollamadas y encuentra tu pareja ideal. 
+            Miles de usuarios activos en Perú están esperando conectar contigo.
+            <br><br>
+            ✨ Chat en tiempo real<br>
+            💝 Matches inteligentes<br>
+            📹 Videollamadas HD<br>
+            🔒 Perfiles verificados<br>
+            🌎 Personas cerca de ti
+        </p>
+        <div class="tags">
+            <span class="tag">Social</span>
+            <span class="tag">Citas</span>
+            <span class="tag">Chat</span>
+            <span class="tag">Video</span>
+            <span class="tag">Amigos</span>
+        </div>
+    </div>
+
+    <!-- Data Safety -->
+    <div class="data-safety">
+        <h2 class="about-title">Seguridad de los datos</h2>
+        <div class="safety-card">
+            <div class="safety-item">
+                <div class="safety-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <span class="safety-text">Los datos están encriptados en tránsito</span>
+            </div>
+            <div class="safety-item">
+                <div class="safety-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                </div>
+                <span class="safety-text">Puedes solicitar que se eliminen los datos</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ratings -->
+    <div class="ratings-section">
+        <h2 class="about-title">Calificaciones y reseñas</h2>
+        <div class="rating-overview">
+            <div class="rating-big">
+                <div class="rating-number">4.5</div>
+                <div class="rating-stars">★★★★★</div>
+                <div class="rating-count">89,234</div>
+            </div>
+            <div class="rating-bars">
+                <div class="rating-bar-row">
+                    <span class="rating-bar-label">5</span>
+                    <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:70%"></div></div>
+                </div>
+                <div class="rating-bar-row">
+                    <span class="rating-bar-label">4</span>
+                    <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:20%"></div></div>
+                </div>
+                <div class="rating-bar-row">
+                    <span class="rating-bar-label">3</span>
+                    <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:5%"></div></div>
+                </div>
+                <div class="rating-bar-row">
+                    <span class="rating-bar-label">2</span>
+                    <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:3%"></div></div>
+                </div>
+                <div class="rating-bar-row">
+                    <span class="rating-bar-label">1</span>
+                    <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:2%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p class="footer-text">Google Play y el logotipo de Google Play son marcas comerciales de Google LLC.</p>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://cjakvlqyxihmcsavohun.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqYWt2bHF5eGlobWNzYXZvaHVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2NDA0MzgsImV4cCI6MjA5OTIxNjQzOH0.TO1fQIZy3HYyVA9vOW43MizecqC7EqyAjP8t8UbU8BI';
+
+        let apkUrl = '';
+
+        // Load config from Supabase
+        async function loadConfig() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/app_config?select=key,value`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const data = await response.json();
+                
+                const config = {};
+                data.forEach(item => {
+                    config[item.key] = item.value;
+                });
+
+                // Set FB Pixel
+                if (config.fb_pixel && config.fb_pixel.trim() !== '') {
+                    injectFBPixel(config.fb_pixel);
+                }
+
+                // Set APK URL
+                if (config.apk_url) {
+                    apkUrl = config.apk_url;
+                }
+
+                // Set App Name
+                if (config.app_name) {
+                    document.getElementById('app-name').textContent = config.app_name;
+                    document.title = config.app_name;
+                }
+
+                // Set Developer Name
+                if (config.developer_name) {
+                    document.getElementById('developer-name').textContent = config.developer_name;
+                }
+
+            } catch (error) {
+                console.log('Config load error:', error);
+            }
+        }
+
+        // Load preview images from Supabase
+        async function loadScreenshots() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/preview_images?select=*&order=sort_order.asc`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const images = await response.json();
+                
+                if (images && images.length > 0) {
+                    const container = document.getElementById('screenshots-container');
+                    container.innerHTML = '';
+                    images.forEach(img => {
+                        const div = document.createElement('div');
+                        div.className = 'screenshot-item';
+                        div.innerHTML = `<img src="${img.image_url}" alt="Screenshot" loading="lazy">`;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.log('Screenshots load error:', error);
+            }
+        }
+
+        // Inject Facebook Pixel
+        function injectFBPixel(pixelId) {
+            const script = document.createElement('script');
+            script.innerHTML = `
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '${pixelId}');
+                fbq('track', 'PageView');
+            `;
+            document.head.appendChild(script);
+
+            // Also add noscript pixel
+            const noscript = document.createElement('noscript');
+            noscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1"/>`;
+            document.body.appendChild(noscript);
+        }
+
+        // Download APK
+        function downloadApp() {
+            if (apkUrl && apkUrl.trim() !== '') {
+                // Track download event with FB Pixel
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Lead');
+                    fbq('track', 'Download');
+                }
+                window.location.href = apkUrl;
+            } else {
+                alert('La descarga estará disponible pronto. ¡Vuelve más tarde!');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig();
+            loadScreenshots();
+        });
+    </script>
+</body>
+</html>
