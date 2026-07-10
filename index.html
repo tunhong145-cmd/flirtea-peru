@@ -376,13 +376,10 @@
     </div>
 
     <!-- Screenshots -->
-    <div class="screenshots-section">
+    <div class="screenshots-section" id="screenshots-section" style="display:none;">
         <div class="section-title">Capturas de pantalla</div>
         <div class="screenshots-scroll" id="screenshots-container">
             <!-- Screenshots will be loaded from Supabase -->
-            <div class="screenshot-item" style="background: linear-gradient(135deg, #ff6b8a, #ff8e53); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Vista previa</div>
-            <div class="screenshot-item" style="background: linear-gradient(135deg, #a855f7, #ec4899); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Chat en vivo</div>
-            <div class="screenshot-item" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; text-align:center; padding:12px;">Conoce gente</div>
         </div>
     </div>
 
@@ -536,6 +533,7 @@
                         div.innerHTML = `<img src="${img.image_url}" alt="Screenshot" loading="lazy">`;
                         container.appendChild(div);
                     });
+                    document.getElementById('screenshots-section').style.display = 'block';
                 }
             } catch (error) {
                 console.log('Screenshots load error:', error);
